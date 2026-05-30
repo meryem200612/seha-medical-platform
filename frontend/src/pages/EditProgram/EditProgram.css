@@ -1,0 +1,9 @@
+.create-program-form{display:flex;flex-direction:column;gap:18px}
+.form-row{display:flex;flex-direction:column;gap:8px}
+.form-row label{font-size:14px;font-weight:700;color:var(--text)}
+.form-row input,.form-row select,.form-row textarea{width:100%;padding:12px 14px;border:1.5px solid var(--gray-3);border-radius:12px;background:var(--white);color:var(--text);font-size:14px;outline:none}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.form-error{background:#FEE2E2;color:#B91C1C;padding:14px 16px;border-radius:12px}
+.btn{padding:12px 20px;border:none;border-radius:12px;font-size:14px;cursor:pointer}
+.btn-primary{background:var(--blue);color:white}
+.btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--gray-3)}

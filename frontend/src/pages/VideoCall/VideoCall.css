@@ -1,0 +1,348 @@
+/* Video consultation — teal dark UI */
+.vc-page {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #0c1419;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+}
+
+.vc-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  min-height: 0;
+}
+
+.vc-stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: radial-gradient(ellipse at 30% 20%, #1a3a3c 0%, #0c1419 55%, #060a0c 100%);
+  overflow: hidden;
+}
+
+.vc-remote-wrap {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vc-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.vc-video--remote {
+  background: #0f1a1c;
+}
+
+.vc-remote-placeholder {
+  text-align: center;
+  padding: 24px;
+  max-width: 360px;
+}
+
+.vc-remote-name {
+  font-family: var(--font-display, 'Cormorant Garamond', serif);
+  font-size: 28px;
+  font-style: italic;
+  color: #fff;
+  margin: 20px 0 8px;
+}
+
+.vc-remote-status {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--teal-light, #52c8c4);
+  margin: 0 0 8px;
+}
+
+.vc-remote-hint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.vc-pip {
+  position: absolute;
+  bottom: 100px;
+  left: 24px;
+  width: 200px;
+  height: 132px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 2px solid rgba(42, 157, 160, 0.5);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  z-index: 20;
+  background: #1a2e35;
+}
+
+.vc-pip-off {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #1a2e35;
+  color: #fff;
+  font-size: 13px;
+  gap: 4px;
+}
+
+.vc-pip-off small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+}
+
+.vc-topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 280px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(to bottom, rgba(12, 20, 25, 0.85), transparent);
+  z-index: 15;
+}
+
+.vc-topbar-doc {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.vc-topbar-name {
+  display: block;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.vc-topbar-doc small {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 12px;
+}
+
+.vc-topbar-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.vc-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.vc-badge--live {
+  background: rgba(184, 75, 64, 0.25);
+  color: #fca5a5;
+}
+
+.vc-timer {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.vc-chat {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background: rgba(12, 20, 25, 0.92);
+  border-left: 1px solid rgba(42, 157, 160, 0.2);
+  display: flex;
+  flex-direction: column;
+  z-index: 12;
+  backdrop-filter: blur(8px);
+}
+
+.vc-chat-title {
+  padding: 16px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vc-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.vc-chat-empty {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+  text-align: center;
+  margin: 24px 0;
+}
+
+.vc-chat-bubble {
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 90%;
+}
+
+.vc-chat-bubble--me {
+  align-self: flex-end;
+  background: rgba(42, 157, 160, 0.35);
+  border-bottom-right-radius: 4px;
+}
+
+.vc-chat-form {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.vc-chat-form input {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 99px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 13px;
+  outline: none;
+}
+
+.vc-chat-form input:focus {
+  border-color: var(--teal, #2a9da0);
+}
+
+.vc-chat-form button {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: var(--teal, #2a9da0);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.vc-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 18px 24px;
+  background: rgba(12, 20, 25, 0.95);
+  border-top: 1px solid rgba(42, 157, 160, 0.15);
+  z-index: 25;
+}
+
+.vc-controls-group {
+  display: flex;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.vc-ctrl {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.vc-ctrl:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.vc-ctrl--off {
+  background: rgba(184, 75, 64, 0.35);
+}
+
+.vc-ctrl--hangup {
+  width: auto;
+  min-width: 140px;
+  border-radius: 99px;
+  padding: 0 28px;
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.vc-ctrl--hangup:hover {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.vc-controls-timer {
+  margin-left: auto;
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Avatar sizes in video */
+.doc-avatar--xl {
+  width: 120px;
+  height: 120px;
+  font-size: 36px;
+  margin: 0 auto;
+}
+
+.doc-avatar--sm {
+  width: 44px;
+  height: 44px;
+  font-size: 14px;
+}
+
+.doc-avatar--photo {
+  padding: 0;
+  overflow: hidden;
+}
+
+.doc-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+@media (max-width: 900px) {
+  .vc-chat {
+    display: none;
+  }
+  .vc-topbar {
+    right: 0;
+  }
+  .vc-pip {
+    width: 120px;
+    height: 80px;
+    bottom: 88px;
+  }
+}

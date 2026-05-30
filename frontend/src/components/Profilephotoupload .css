@@ -1,0 +1,66 @@
+/* ProfilePhotoUpload.css
+   Add this to your global stylesheet or import it in ProfilePhotoUpload.jsx */
+
+.profile-photo-upload {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-photo-upload__btn {
+  position: relative;
+  display: inline-block;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  border-radius: 50%;
+  outline: none;
+}
+
+.profile-photo-upload__btn:focus-visible {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Camera overlay — hidden by default, shown on hover */
+.profile-photo-upload__overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.profile-photo-upload__btn:hover .profile-photo-upload__overlay,
+.profile-photo-upload__btn--loading .profile-photo-upload__overlay {
+  opacity: 1;
+}
+
+/* Spinner */
+.profile-photo-upload__spinner {
+  width: 22px;
+  height: 22px;
+  border: 3px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: ppu-spin 0.7s linear infinite;
+}
+
+@keyframes ppu-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Error message */
+.profile-photo-upload__error {
+  font-size: 0.78rem;
+  color: #dc2626;
+  margin: 0;
+  max-width: 200px;
+  text-align: center;
+}

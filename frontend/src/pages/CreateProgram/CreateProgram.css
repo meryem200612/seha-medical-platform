@@ -1,0 +1,7 @@
+.create-program-form{display:flex;flex-direction:column;gap:18px;background:var(--white);border:1.5px solid var(--gray-3);border-radius:20px;padding:28px}
+.create-program-form .form-row{display:flex;flex-direction:column;gap:8px}
+.create-program-form label{font-size:13px;font-weight:700;color:var(--text);}
+.create-program-form input,.create-program-form select,.create-program-form textarea{border:1px solid var(--gray-3);border-radius:14px;background:var(--white);padding:12px 14px;font-size:14px;color:var(--text);width:100%;outline:none}
+.create-program-form textarea{resize:vertical;min-height:100px}
+.create-program-form .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.create-program-form .form-error{color:var(--red);background:rgba(255,234,238,.8);border:1px solid rgba(245,101,101,.3);padding:12px 14px;border-radius:14px}

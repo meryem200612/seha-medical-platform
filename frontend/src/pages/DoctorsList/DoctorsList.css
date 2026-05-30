@@ -1,0 +1,23 @@
+.price-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.price-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.price-option input[type="radio"] {
+  margin: 0;
+  accent-color: var(--blue);
+}
+
+.price-option span {
+  user-select: none;
+}

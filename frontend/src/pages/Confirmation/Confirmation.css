@@ -1,0 +1,9 @@
+/* CONFIRMATION */
+.confirm-screen{padding:60px 32px;text-align:center;max-width:560px;margin:0 auto}
+.confirm-icon{width:80px;height:80px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 24px}
+.confirm-title{font-size:28px;font-weight:800;color:var(--text);margin-bottom:12px}
+.confirm-sub{font-size:15px;color:var(--text-2);margin-bottom:32px;line-height:1.7}
+.confirm-card{background:var(--blue-light);border-radius:var(--radius-lg);padding:20px;text-align:left;margin-bottom:24px}
+.confirm-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;border-bottom:1px solid rgba(42,127,255,.2)}
+.confirm-row:last-child{border:none}
+
