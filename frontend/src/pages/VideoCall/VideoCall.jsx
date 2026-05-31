@@ -44,6 +44,8 @@ export default function VideoCall() {
   const remoteVideoRef = useRef(null);
   const peerRef = useRef(null);
   const activeCallRef = useRef(null);
+  const dataConnRef = useRef(null);
+  const callConnectedRef = useRef(false);
   const streamRef = useRef(null);
 
   const locationDoctor = location.state?.doctor;
@@ -69,6 +71,39 @@ export default function VideoCall() {
       videoEl.srcObject = stream;
     }
   }, []);
+
+  const receiveChatMessage = useCallback((payload) => {
+    if (!payload || payload.type !== 'chat' || !payload.text) return;
+
+    setChatMessages((prev) => [
+      ...prev,
+      {
+        id: payload.id || `${Date.now()}-remote`,
+        from: 'them',
+        text: payload.text,
+      },
+    ]);
+  }, []);
+
+  const setupDataConnection = useCallback((conn) => {
+    if (!conn) return;
+
+    dataConnRef.current?.close();
+    dataConnRef.current = conn;
+
+    conn.on('data', receiveChatMessage);
+    conn.on('close', () => {
+      if (dataConnRef.current === conn) {
+        dataConnRef.current = null;
+      }
+    });
+    conn.on('error', (err) => {
+      console.error('Peer chat error:', err);
+      if (dataConnRef.current === conn) {
+        dataConnRef.current = null;
+      }
+    });
+  }, [receiveChatMessage]);
 
   useEffect(() => {
     const interval = setInterval(() => setTimer((t) => t + 1), 1000);
@@ -108,6 +143,7 @@ export default function VideoCall() {
         streamRef.current.getTracks().forEach((t) => t.stop());
       }
       activeCallRef.current?.close();
+      dataConnRef.current?.close();
       peerRef.current?.destroy();
     };
   }, [user, attachStream]);
@@ -149,9 +185,13 @@ export default function VideoCall() {
           setSessionMeta(meta);
         }
 
-        if (isDoctor && meta.mode === 'lobby') {
+        if (isDoctor) {
           setCallStatus('waiting');
-          setStatusDetail('Le patient peut vous appeler depuis la salle d\'attente.');
+          setStatusDetail(
+            meta.mode === 'lobby'
+              ? 'Le patient peut vous appeler depuis la salle d\'attente.'
+              : 'Salle vidéo ouverte — en attente de l\'appel du patient.'
+          );
 
           peer = new Peer(meta.peer_id, { debug: 1 });
 
@@ -161,22 +201,30 @@ export default function VideoCall() {
 
           peer.on('call', (call) => {
             activeCallRef.current = call;
+            callConnectedRef.current = false;
             setCallStatus('connecting');
             call.answer(localStream);
             call.on('stream', (remote) => {
+              callConnectedRef.current = true;
               setRemoteStream(remote);
               setCallStatus('connected');
               setStatusDetail('');
             });
             call.on('close', () => {
+              callConnectedRef.current = false;
+              activeCallRef.current = null;
               setRemoteStream(null);
               setCallStatus('waiting');
             });
             call.on('error', () => {
+              callConnectedRef.current = false;
+              activeCallRef.current = null;
               setCallStatus('error');
               setStatusDetail('Erreur pendant l\'appel.');
             });
           });
+
+          peer.on('connection', setupDataConnection);
 
           peer.on('error', (err) => {
             console.error('Peer error (doctor):', err);
@@ -190,26 +238,48 @@ export default function VideoCall() {
           peer = new Peer({ debug: 1 });
 
           peer.on('open', () => {
+            const openChat = () => {
+              if (dataConnRef.current?.open) return;
+              const conn = peer.connect(targetId, { reliable: true });
+              setupDataConnection(conn);
+            };
+
             const attemptCall = () => {
-              if (activeCallRef.current) {
-                activeCallRef.current.close();
-              }
+              if (callConnectedRef.current || activeCallRef.current?.open) return;
+
               try {
+                openChat();
                 const call = peer.call(targetId, localStream);
                 activeCallRef.current = call;
+                callConnectedRef.current = false;
+
+                setTimeout(() => {
+                  if (!callConnectedRef.current && activeCallRef.current === call) {
+                    call.close();
+                    activeCallRef.current = null;
+                    setCallStatus('offline');
+                    setStatusDetail('Le médecin n\'est pas encore connecté. Réessayez dans quelques secondes.');
+                  }
+                }, 7000);
 
                 call.on('stream', (remote) => {
+                  callConnectedRef.current = true;
+                  clearInterval(retryTimer);
                   setRemoteStream(remote);
                   setCallStatus('connected');
                   setStatusDetail('');
                 });
 
                 call.on('close', () => {
+                  callConnectedRef.current = false;
+                  activeCallRef.current = null;
                   setRemoteStream(null);
                   setCallStatus('offline');
                 });
 
                 call.on('error', () => {
+                  callConnectedRef.current = false;
+                  activeCallRef.current = null;
                   setCallStatus('offline');
                   setStatusDetail('Le médecin n\'est pas encore connecté. Réessayez dans quelques secondes.');
                 });
@@ -220,11 +290,25 @@ export default function VideoCall() {
             };
 
             attemptCall();
-            retryTimer = setInterval(attemptCall, 8000);
+            retryTimer = setInterval(() => {
+              if (!callConnectedRef.current && !activeCallRef.current) {
+                attemptCall();
+              }
+              if (!dataConnRef.current?.open) {
+                openChat();
+              }
+            }, 8000);
           });
 
           peer.on('error', (err) => {
             console.error('Peer error (patient):', err);
+            if (err?.type === 'peer-unavailable') {
+              activeCallRef.current = null;
+              callConnectedRef.current = false;
+              setCallStatus('offline');
+              setStatusDetail('Le médecin n\'est pas encore connecté. Réessayez dans quelques secondes.');
+              return;
+            }
             setCallStatus('error');
           });
         }
@@ -242,10 +326,14 @@ export default function VideoCall() {
     return () => {
       clearInterval(retryTimer);
       activeCallRef.current?.close();
+      activeCallRef.current = null;
+      dataConnRef.current?.close();
+      dataConnRef.current = null;
+      callConnectedRef.current = false;
       peerRef.current?.destroy();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, localStream, isDoctor, isPatient, doctorUserId]);
+  }, [user, localStream, isDoctor, isPatient, doctorUserId, setupDataConnection]);
 
   const toggleCamera = () => {
     const stream = streamRef.current;
@@ -275,6 +363,7 @@ export default function VideoCall() {
 
   const endCall = () => {
     activeCallRef.current?.close();
+    dataConnRef.current?.close();
     peerRef.current?.destroy();
     if (streamRef.current) {
       streamRef.current.getTracks().forEach((t) => t.stop());
@@ -286,9 +375,15 @@ export default function VideoCall() {
     e.preventDefault();
     const text = chatDraft.trim();
     if (!text) return;
+    const message = { id: Date.now(), type: 'chat', text };
+
+    if (dataConnRef.current?.open) {
+      dataConnRef.current.send(message);
+    }
+
     setChatMessages((prev) => [
       ...prev,
-      { id: Date.now(), from: 'me', text },
+      { id: message.id, from: 'me', text },
     ]);
     setChatDraft('');
   };

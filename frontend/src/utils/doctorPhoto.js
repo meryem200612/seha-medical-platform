@@ -1,4 +1,4 @@
-const API_ORIGIN = 'http://localhost:8000';
+import { storageUrl } from '../api/baseUrl';
 
 /**
  * Resolve doctor photo URL from API fields.
@@ -9,7 +9,7 @@ export function getDoctorPhotoUrl(doctor) {
   const profile = doctor.doctor_profile ?? doctor.doctorProfile;
   if (profile?.photo_url) return profile.photo_url;
   if (doctor.photo_path) {
-    return `${API_ORIGIN}/storage/${doctor.photo_path.replace(/^\//, '')}`;
+    return storageUrl(doctor.photo_path);
   }
   return null;
 }

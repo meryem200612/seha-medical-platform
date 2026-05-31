@@ -74,7 +74,7 @@ class PatientController extends Controller
         $path = $request->file('photo')->store('patient-photos', 'public');
         $profile->update(['photo_path' => $path]);
 
-        $photoUrl = asset('storage/' . $path);
+        $photoUrl = Storage::disk('public')->url($path);
 
         return response()->json([
             'message' => 'Photo mise à jour.',

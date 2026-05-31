@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { storageUrl } from '../api/baseUrl';
 import DoctorAvatar from './DoctorAvatar';
 
 /**
@@ -51,7 +52,7 @@ export default function ProfilePhotoUpload({ size = 'lg', className = '' }) {
                   photo_url:
                       user?.patientProfile?.photo_url ||
                       (user?.patientProfile?.photo_path
-                          ? `http://localhost:8000/storage/${user.patientProfile.photo_path}`
+                          ? storageUrl(user.patientProfile.photo_path)
                           : null),
               };
 

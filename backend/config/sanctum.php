@@ -1,6 +1,12 @@
 <?php
 
-use Laravel\Sanctum\Sanctum;
+$frontendUrls = array_filter(array_map('trim', explode(',', env('FRONTEND_URL', 'http://localhost:5173'))));
+$frontendDomains = array_map(static function ($url) {
+    $host = parse_url($url, PHP_URL_HOST) ?: $url;
+    $port = parse_url($url, PHP_URL_PORT);
+
+    return $port ? "{$host}:{$port}" : $host;
+}, $frontendUrls);
 
 return [
 
@@ -15,12 +21,7 @@ return [
     |
     */
 
-    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', sprintf(
-        '%s%s',
-        'localhost,localhost:3000,127.0.0.1,127.0.0.1:8000,::1',
-        Sanctum::currentApplicationUrlWithPort(),
-        // Sanctum::currentRequestHost(),
-    ))),
+    'stateful' => explode(',', env('SANCTUM_STATEFUL_DOMAINS', implode(',', $frontendDomains))),
 
     /*
     |--------------------------------------------------------------------------

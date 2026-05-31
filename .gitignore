@@ -1,0 +1,58 @@
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+vendor/
+backend/vendor/
+frontend/node_modules/
+
+# Build outputs
+dist/
+dist-ssr/
+frontend/dist/
+backend/public/build/
+backend/public/hot
+backend/public/storage
+
+# Laravel runtime files
+backend/storage/*.key
+backend/storage/pail/
+backend/bootstrap/cache/*.php
+backend/.phpunit.cache/
+backend/.phpunit.result.cache
+backend/database/*.sqlite*
+
+# Logs and caches
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+.cache/
+
+# Local tooling and editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+.zed/
+.fleet/
+.nova/
+*.sw?
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Local agent/tool state
+.codex/
+.agents/
+
+# One-off installers and local auth
+backend/composer-setup.php
+backend/auth.json
