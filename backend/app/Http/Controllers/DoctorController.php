@@ -9,7 +9,6 @@ use App\Models\ProgramPurchase;
 use App\Models\Review;
 use App\Models\Specialty;
 use App\Support\DoctorPhoto;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -372,31 +371,17 @@ class DoctorController extends Controller
 
         $doctorId = $user->id;
 
-        try {
-            $program = Program::create([
-                'doctor_id' => $doctorId,
-                'title' => $validated['name'],
-                'category' => $validated['specialty'],
-                'description' => $validated['description'],
-                'content' => $validated['content'],
-                'price' => $validated['price'],
-                'duration_weeks' => $validated['duration'],
-            ]);
+        $program = Program::create([
+            'doctor_id' => $doctorId,
+            'title' => $validated['name'],
+            'category' => $validated['specialty'],
+            'description' => $validated['description'],
+            'content' => $validated['content'],
+            'price' => $validated['price'],
+            'duration_weeks' => $validated['duration'],
+        ]);
 
-            return response()->json($program, 201);
-        } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'SQL error when saving program',
-                'error' => $e->getMessage(),
-                'sql' => $e->getSql(),
-                'bindings' => $e->getBindings(),
-            ], 500);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'message' => 'Unexpected error when saving program',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json($program, 201);
     }
 
     public function showProgram(Request $request, $id)
@@ -494,30 +479,16 @@ class DoctorController extends Controller
             'duration' => 'required|integer|min:1',
         ]);
 
-        try {
-            $program->update([
-                'title' => $validated['name'],
-                'category' => $validated['specialty'],
-                'description' => $validated['description'],
-                'content' => $validated['content'],
-                'price' => $validated['price'],
-                'duration_weeks' => $validated['duration'],
-            ]);
+        $program->update([
+            'title' => $validated['name'],
+            'category' => $validated['specialty'],
+            'description' => $validated['description'],
+            'content' => $validated['content'],
+            'price' => $validated['price'],
+            'duration_weeks' => $validated['duration'],
+        ]);
 
-            return response()->json($program);
-        } catch (QueryException $e) {
-            return response()->json([
-                'message' => 'SQL error when updating program',
-                'error' => $e->getMessage(),
-                'sql' => $e->getSql(),
-                'bindings' => $e->getBindings(),
-            ], 500);
-        } catch (\Throwable $e) {
-            return response()->json([
-                'message' => 'Unexpected error when updating program',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+        return response()->json($program);
     }
 
     public function specialties()
